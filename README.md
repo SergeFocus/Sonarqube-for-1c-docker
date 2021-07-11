@@ -45,30 +45,19 @@ sonarqube-community-branch-plugin - 1.8.0
 2) Вход в сонар происходит по адресу ```http://localhost:32772``` *(порт по умолчанию из docker-compose)*
 3) Желательно поменять логин и пароль ```docker-compose``` с ```sonar:sonar``` на ваши новые (см environments ```POSTGRES_USER, POSTGRES_PASSWORD, SONARQUBE_JDBC_USERNAME, SONARQUBE_JDBC_PASSWORD```)
 
-## Известные ошибки
+## For Photon OS
 
-1. При работе Docker в ОС Windows на базе WSL2 при старте контейнера может появится ошибка:
+1. Измените файл `/etc/security/limits.conf` или добавьте следующий контент в `/etc/security/limits.d`:
 
-```vm.max_map_count 65530 is too low```
+```
+echo "hard nofile 65536" >> /etc/sysctl.d/sonsr.conf
+echo "soft nofile 65536" >> /etc/sysctl.d/sonsr.conf
+echo "hard nproc 4096" >> /etc/sysctl.d/sonsr.conf
+echo "soft nproc 2048" >> /etc/sysctl.d/sonsr.conf
+```
+2. Измените файл /etc/sysctl.conf или добавьте следующий контент в `/etc/sysctl.d`:
 
-Для решение проблемы необходимо:
-
-- Зайти в консоль (cmd, powershell)
-- Выполнить следующие команды:
-
-```wsl --shutdown```
-
-```wsl -d docker-desktop```
-
-```sysctl -w vm.max_map_count=262144```
-
-```sysctl -w fs.file-max=65536```
-
-- Выйти из терминала wsl
-
-- Перезапустить Docker Desktop
-
-При работе в Linux на хосте докера достаточно выполнить команду
-
-```echo "vm.max_map_count=262144" >> /etc/sysctl.conf```
-```echo "sysctl -w fs.file-max=65536" >> /etc/sysctl.conf```
+```
+echo "vm.max_map_count=262144" >> /etc/sysctl.d/sonsr.conf
+echo "fs.file-max=65536" >> /etc/sysctl.d/sonsr.conf
+```
